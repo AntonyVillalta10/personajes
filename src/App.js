@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+  const [characters, setCharacters] = useState([]);
+
+  // Obtener todos los personajes desde la API
+  useEffect(() => {
+    fetch('https://rickandmortyapi.com/api/character')
+      .then((response) => response.json())
+      .then((data) => setCharacters(data.results))
+      .catch((error) => console.error('Error fetching data:', error));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Personajes de Rick y Morty</h1>
+      <div className="characters-container">
+        {characters.map((character) => (
+          <div className="character-card" key={character.id}>
+            <img
+              src={character.image}
+              alt={character.name}
+              className="character-image"
+            />
+            <h2>{character.name}</h2>
+            <p>{character.status}</p>
+            <p>{character.species}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
